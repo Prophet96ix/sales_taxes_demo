@@ -1,13 +1,17 @@
 package org.example.helpers;
 
+import java.math.BigDecimal;
+
 /**
  *
  */
 public enum Category {
 
-    STANDARD,
+    STANDARD(BigDecimal.valueOf(0.1)),
     BOOK,
     FOOD,
-    MEDICAL
+    MEDICAL;
 
+    Category(BigDecimal tax) {
+    }
 }

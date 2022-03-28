@@ -2,15 +2,16 @@ package org.example;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Cart {
 
     private final List<Item> items = new ArrayList<>();
 
-    public void addItems(Item... item) {
-        this.items.addAll(Arrays.asList(item));
+    public void addItem(Item item, Integer quantity) {
+        for (int i = 1; i < quantity; i++) {
+            this.items.add(item);
+        }
     }
 
     public void checkOut() {

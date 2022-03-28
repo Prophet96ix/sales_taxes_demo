@@ -24,7 +24,9 @@ class CartTest {
         Item musicCD = new Item("music CD", BigDecimal.valueOf(14.99), Category.STANDARD, false);
         Item chocolateBar = new Item("chocolate bar", BigDecimal.valueOf(0.85), Category.FOOD, false);
 
-        cart.addItems(book, musicCD, chocolateBar);
+        cart.addItem(book, 1);
+        cart.addItem(musicCD, 1);
+        cart.addItem(chocolateBar,1);
         cart.checkOut();
 
         assertEquals(0, BigDecimal.valueOf(12.49).compareTo(book.getTotalCost()));

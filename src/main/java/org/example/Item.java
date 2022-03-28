@@ -17,6 +17,10 @@ public class Item extends ItemMeta {
             @NonNull Boolean imported
     ) {
         super(name, price, category, imported);
+
+        if (price == 0) {
+
+        }
     }
 
     /**
