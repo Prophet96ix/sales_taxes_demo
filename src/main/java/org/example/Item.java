@@ -1,56 +1,67 @@
 package org.example;
 
-import lombok.NonNull;
-import org.example.helpers.Category;
-import org.example.helpers.ItemMeta;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+/**
+ * Item represents data which is used to create a kind of product/item
+ */
+public record Item(String name, BigDecimal price, Category category, Boolean imported) {
 
-public class Item extends ItemMeta {
+    public Item(String name, BigDecimal price, Category category, Boolean imported) {
+        this.name = name;
+        this.price = price;
+        this.category = category;
+        this.imported = imported;
 
-    public Item(
-            @NonNull String name,
-            @NonNull BigDecimal price,
-            @NonNull Category category,
-            @NonNull Boolean imported
-    ) {
-        super(name, price, category, imported);
-
-        if (price == 0) {
-
-        }
+        validate();
     }
 
     /**
      * @return the total cost of an item including taxes
      */
     public BigDecimal getTotalCost() {
-        return getPrice().add(getSalesTax());
+        return price().add(getSalesTax());
     }
 
     /**
-     * @return the sales tax cost of an item
+     * @return the sales taxes cost of an item
      */
     public BigDecimal getSalesTax() {
-        return getPrice().multiply(getTaxPercentage())
-                .divide(BigDecimal.valueOf(0.05), 0, RoundingMode.UP)
-                .multiply(BigDecimal.valueOf(0.05));
+        return price().multiply(getTaxValue()).divide(BigDecimal.valueOf(0.05), 0, RoundingMode.UP).multiply(BigDecimal.valueOf(0.05));
     }
 
     /**
-     * @return the percentage of all taxes combined
+     * @return the value of all taxes combined
      */
-    private BigDecimal getTaxPercentage() {
+    private BigDecimal getTaxValue() {
         BigDecimal tax = BigDecimal.ZERO;
-        if (Category.STANDARD.equals(getCategory())) {
+        if (Category.STANDARD.equals(category())) {
             tax = tax.add(BigDecimal.valueOf(0.1));
         }
-        if (getImported()) {
+        if (imported()) {
             tax = tax.add(BigDecimal.valueOf(0.05));
         }
         return tax;
+    }
+
+    /**
+     * validate the given input
+     */
+    private void validate() {
+        if (price() == null || price().compareTo(BigDecimal.ZERO) != 1) {
+            throw new IllegalArgumentException("price must be specified");
+        }
+        if (name() == null || name().isBlank()) {
+            throw new IllegalArgumentException("name must be specified");
+        }
+        if (category() == null) {
+            throw new IllegalArgumentException("category must be specified");
+        }
+        if (imported() == null) {
+            throw new IllegalArgumentException("imported must be specified");
+        }
     }
 
 }
